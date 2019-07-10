@@ -17,6 +17,7 @@ ENV ALINODE_VERSION=3.14.1 \
 RUN addgroup -g 1000 node \
   && adduser -u 1000 -G node -s /bin/sh -D node \
   && sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+  && apk add -U tzdata \
   && apk add --no-cache libstdc++ ca-certificates curl \
   && apk add --no-cache --virtual .build-deps-yarn gnupg \
   && for key in \
@@ -39,6 +40,8 @@ RUN addgroup -g 1000 node \
   && ENABLE_NODE_LOG=NO yarn config set disturl https://npm.taobao.org/dist \
   && ENABLE_NODE_LOG=NO yarn global add pm2 \
   && ENABLE_NODE_LOG=NO yarn cache clean --force \
+  && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+  && apk del tzdata \
   && apk del .build-deps-yarn \
   && rm -rf /tmp/*
 
